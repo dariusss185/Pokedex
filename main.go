@@ -17,9 +17,16 @@ type cliCommand struct {
 func main() {
 	pokeClient := pokeapi.NewClient(5 * time.Second)
 	scanner := bufio.NewScanner(os.Stdin)
+
 	cfg := config{
+		pokedex:       make(map[string]pokeapi.Pokemon),
 		pokeapiClient: pokeClient,
 		commands: map[string]cliCommand{
+			"inspect": cliCommand{
+				name:        "inspect",
+				description: "Shows the name, height, weight, stats of the Pokemon",
+				callback:    inspect,
+			},
 			"exit": cliCommand{
 				name:        "exit",
 				description: "Exit the Pokedex",
@@ -40,21 +47,31 @@ func main() {
 				description: "display a list of 20 previous locations",
 				callback:    commandMapB,
 			},
-			"explore":{
-				name:	"explore",
+			"explore": {
+				name:        "explore",
 				description: "list pokemons inside a location",
-				callback: explore,
+				callback:    explore,
+			},
+			"catch": {
+				name:        "catch",
+				description: "catch a pokemon!",
+				callback:    catch,
+			},
+			"pokedex": {
+				name:        "pokedex",
+				description: "list all the pokemons you have caught!",
+				callback:    pokedexcli,
 			},
 		},
 	}
-	initialize(&cfg,nil)
+	initialize(&cfg, nil)
 	for {
 		fmt.Print("Pokedex > ")
 		scanner.Scan()
 		words := cleanInput(scanner.Text())
 		if len(words) > 0 {
 			if command, exists := cfg.commands[words[0]]; exists {
-				err := command.callback(&cfg,words)
+				err := command.callback(&cfg, words)
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -65,5 +82,3 @@ func main() {
 		continue
 	}
 }
-
-

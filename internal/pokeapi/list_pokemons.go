@@ -2,9 +2,9 @@ package pokeapi
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
-	"errors"
 )
 
 type pokemons struct {
@@ -15,12 +15,13 @@ type pokemons struct {
 		} `json:"pokemon"`
 	} `json:"pokemon_encounters"`
 }
+
 func (c *Client) Getpokemons(name string) (pokemons, error) {
 	var requestURL string
 	if name == "" {
-		return pokemons{},errors.New("Invalid location")
+		return pokemons{}, errors.New("Invalid location")
 	} else {
-		requestURL = "https://pokeapi.co/api/v2/location-area/"+name
+		requestURL = "https://pokeapi.co/api/v2/location-area/" + name
 	}
 	if val, ok := c.cache.Get(requestURL); ok {
 		var cached pokemons

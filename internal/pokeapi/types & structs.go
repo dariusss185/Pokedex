@@ -10,4 +10,3 @@ type LocationAreaResponse struct {
 	Previous *string    `json:"previous"`
 	Results  []Location `json:"results"`
 }
-

@@ -6,6 +6,7 @@ import (
 )
 
 type config struct {
+	pokedex       map[string]pokeapi.Pokemon
 	pokeapiClient pokeapi.Client
 	commands      map[string]cliCommand
 	next          *string
